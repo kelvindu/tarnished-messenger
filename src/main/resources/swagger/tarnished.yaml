@@ -1,0 +1,123 @@
+openapi: 3.0.3
+info:
+  title: Tarnished Messenger
+  description: Open API documents for tarnished messenger written in kotlin
+  version: 1.0.0
+servers:
+  - url: 'http://localhost:8080'
+paths:
+  /tarnished:
+    get:
+      tags:
+        - Tarnished
+      summary: All tarnished API
+      description: Get all tarnished data
+      responses:
+        '200':
+          description: List of tarnished
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListOfTarnishedResponse'
+  /message:
+    post:
+      tags:
+        - Message
+      summary: Post new message API
+      description: Post new messsage for the corresponding tarnished
+      requestBody:
+        description: Post new message payload
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendMessageRequest'
+      responses:
+        '200':
+          description: New message created for the tarnished
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+  /message/appraise:
+    post:
+      tags:
+        - Message
+      summary: Appraise message API
+      description: Endpoint to appraise existing tarnished message
+      requestBody:
+        description: Appraise message payload
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppraiseMessageRequest'
+      responses:
+        '200':
+          description: Appraise message response
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/MessageResponse'
+components:
+  schemas:
+    SendMessageRequest:
+      type: object
+      properties:
+        tarnished_uid:
+          type: string
+        subject:
+          type: string
+        subject_template:
+          type: integer
+      example:
+        tarnished_uid: 0f2c46a9-ffdd-47bb-bebb-939bf5618501
+        subject: finger
+        subject_template: 0
+    AppraiseMessageRequest:
+      type: object
+      properties:
+        tarnished_uid:
+          type: string
+        message_uid:
+          type: string
+        rating:
+          type: string
+      example:
+        tarnished_uid: 0f2c46a9-ffdd-47bb-bebb-939bf5618501
+        message_uid: 0f2c46a9-ffdd-47bb-bebb-939ffffffff1
+        rating: GOOD_RATING
+    TarnishedResponse:
+      type: object
+      properties:
+        uid:
+          type: string
+        username:
+          type: string
+        status:
+          type: string
+      example:
+        uid: 0f2c46a9-ffdd-47bb-bebb-939bf5618501
+        username: letmesolome
+        status: alive
+    ListOfTarnishedResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/TarnishedResponse'
+    MessageResponse:
+      type: object
+      properties:
+        uid:
+          type: string
+        tarnished_uid:
+          type: string
+        message:
+          type: string
+        good_rating:
+          type: integer
+        bad_rating:
+          type: integer
+      example:
+        uid: 0f2c46a9-ffdd-47bb-bebb-939ffffffff1
+        tarnished_uid: 0f2c46a9-ffdd-47bb-bebb-939bf5618501
+        message: Try finger
+        good_rating:
+        bad_rating:
