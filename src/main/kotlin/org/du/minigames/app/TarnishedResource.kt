@@ -1,6 +1,7 @@
 package org.du.minigames.app
 
 import org.du.minigames.app.dto.TarnishedResponse
+import org.du.minigames.service.TarnishedService
 import javax.ws.rs.GET
 import javax.ws.rs.Path
 import javax.ws.rs.Produces

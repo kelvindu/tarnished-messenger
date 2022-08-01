@@ -22,8 +22,9 @@ dependencies {
     implementation("io.quarkus:quarkus-resteasy-reactive")
     implementation("io.quarkus:quarkus-rest-client")
     implementation("io.quarkus:quarkus-rest-client-jackson")
-    implementation("io.quarkus:quarkus-vertx")
 
+    // https://mvnrepository.com/artifact/org.amqphub.quarkus/quarkus-qpid-jms
+    implementation("org.amqphub.quarkus:quarkus-qpid-jms:0.36.0")
     // https://mvnrepository.com/artifact/com.azure/azure-messaging-servicebus
     implementation("com.azure:azure-messaging-servicebus:7.10.0")
 

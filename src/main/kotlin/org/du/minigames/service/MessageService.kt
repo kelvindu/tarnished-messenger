@@ -8,5 +8,6 @@ import org.du.minigames.enum.StatusEnum
 interface MessageService {
     fun getMessage(tarnishedUid: String, messageUid: String): List<MessageResponse>
     fun sendMessage(request: SendMessageRequest): StatusEnum
+    fun createMessage(request: SendMessageRequest)
     fun appraiseMessage(request: AppraiseMessageRequest): StatusEnum
 }

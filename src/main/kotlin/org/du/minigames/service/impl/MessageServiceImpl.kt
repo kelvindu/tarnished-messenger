@@ -3,6 +3,7 @@ package org.du.minigames.service.impl
 import com.azure.messaging.servicebus.*
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.du.minigames.app.dto.AppraiseMessageRequest
+import org.du.minigames.app.dto.MessageResponse
 import org.du.minigames.app.dto.SendMessageRequest
 import org.du.minigames.domain.repository.MessageRepository
 import org.du.minigames.enum.StatusEnum
@@ -17,11 +18,11 @@ import javax.enterprise.context.ApplicationScoped
 class MessageServiceImpl(val messageRespository: MessageRepository): MessageService {
 
     @ConfigProperty(name = "azure.servicebus.connectionString")
-    var connectionString: String? = null
+    lateinit var connectionString: String
     @ConfigProperty(name = "azure.servicebus.topic")
-    var topicName: String? = null
+    lateinit var topicName: String
     @ConfigProperty(name = "azure.servicebus.subscription")
-    var subName: String? = null
+    lateinit var subName: String
 
     fun initClient(): ServiceBusSenderClient = ServiceBusClientBuilder()
         .connectionString(connectionString)
@@ -45,37 +46,11 @@ class MessageServiceImpl(val messageRespository: MessageRepository): MessageServ
         }
     }
 
-    // handles received messages
-    @Throws(InterruptedException::class)
-
-    fun receiveMessages() {
-        val countdownLatch = CountDownLatch(1)
-
-        // Create an instance of the processor through the ServiceBusClientBuilder
-        val processorClient = ServiceBusClientBuilder()
-            .connectionString(connectionString)
-            .processor()
-            .topicName(topicName)
-            .subscriptionName(subName)
-            .processMessage(this::processMessage)
-            .processError { context: ServiceBusErrorContext? ->
-                processError(
-                    context,
-                    countdownLatch
-                )
-            }
-            .buildProcessorClient()
-        println("Starting the processor")
-        processorClient.start()
-        TimeUnit.SECONDS.sleep(10)
-        println("Stopping and closing the processor")
-        processorClient.close()
+    override fun createMessage(request: SendMessageRequest) {
+        messageRespository.createNewMessage(request)
     }
 
-    fun processMessage(context: ServiceBusReceivedMessageContext ) {
-    }
-    fun processError(context: ServiceBusErrorContext?, countdownLatch: CountDownLatch) {
-    }
+
 
     override fun appraiseMessage(request: AppraiseMessageRequest) = StatusEnum.CREATED
 }
