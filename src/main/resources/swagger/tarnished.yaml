@@ -53,10 +53,10 @@ paths:
       responses:
         '200':
           description: Appraise message response
-#          content:
-#            application/json:
-#              schema:
-#                $ref: '#/components/schemas/MessageResponse'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
 components:
   schemas:
     SendMessageRequest:
@@ -119,5 +119,5 @@ components:
         uid: 0f2c46a9-ffdd-47bb-bebb-939ffffffff1
         tarnished_uid: 0f2c46a9-ffdd-47bb-bebb-939bf5618501
         message: Try finger
-        good_rating:
-        bad_rating:
+        good_rating: 2
+        bad_rating: 3

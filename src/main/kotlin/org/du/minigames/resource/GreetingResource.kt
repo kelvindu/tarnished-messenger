@@ -1,4 +1,4 @@
-package org.du.minigames
+package org.du.minigames.resource
 
 import javax.ws.rs.GET
 import javax.ws.rs.Path

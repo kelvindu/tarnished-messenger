@@ -7,14 +7,14 @@ import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType
 
 @Path("/tarnished")
-class TarnishedResource {
+class TarnishedResource(val tarnishedServiceImpl: TarnishedService) {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    fun allTarnished() = ArrayList<TarnishedResponse>()
+    fun allTarnished() = tarnishedServiceImpl.allTarnished()
 
     @GET
     @Path("/{tarnishedGuid}")
     @Produces(MediaType.APPLICATION_JSON)
-    fun getTarnishedByGuid (tarnishedGuid: String?) = TarnishedResponse()
+    fun getTarnishedByGuid (tarnishedGuid: String?) = tarnishedServiceImpl.findTarnished(tarnishedGuid!!)
 }
