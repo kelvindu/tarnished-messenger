@@ -10,15 +10,17 @@ import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
 @Path("/message")
-class MessageResource(val messageService: MessageService) {
+class MessageResource(private val messageService: MessageService) {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     fun getMessage(
         @QueryParam("tarnished") tarnishedUid: String?,
-        @QueryParam("message") messageUid: String?) =
-        Response.ok(messageService.getMessage(tarnishedUid!!, messageUid!!))
-            .build()
+        @QueryParam("message") messageUid: String?): Response {
+        if (!tarnishedUid.isNullOrBlank()) return Response.ok(messageService.getMessagesFromTarnished(tarnishedUid)).build()
+        else if (!messageUid.isNullOrBlank()) return Response.ok(messageService.getMessageFromUid(messageUid)).build()
+        else return Response.noContent().build()
+    }
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -30,6 +32,6 @@ class MessageResource(val messageService: MessageService) {
     @Produces(MediaType.APPLICATION_JSON)
     fun appraiseMessage(request: AppraiseMessageRequest) =
         Response.ok(BaseResponse(
-            status = HttpStatus.SC_OK, message = messageService.appraiseMessage(request).name))
+            status = HttpStatus.SC_OK, message = messageService.queueAppraisePayload(request).name))
             .build()
 }

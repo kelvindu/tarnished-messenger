@@ -17,6 +17,6 @@ data class AppraiseMessageRequest (
     @field:JsonProperty("message_uid")
     var messageUid: String? = null,
     @field:JsonProperty("rating")
-    var rating: String? = null
+    var rating: Int? = null
 )
 

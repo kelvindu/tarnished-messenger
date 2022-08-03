@@ -1,9 +1,9 @@
 package org.du.minigames.domain.repository.stub
 
+import org.du.minigames.app.dto.AppraiseMessageRequest
 import org.du.minigames.app.dto.MessageResponse
 import org.du.minigames.app.dto.SendMessageRequest
 import org.du.minigames.domain.repository.MessageRepository
-import org.du.minigames.enum.StatusEnum
 import java.util.*
 import javax.enterprise.context.ApplicationScoped
 
@@ -43,20 +43,11 @@ class MessageRepositoryStub: MessageRepository {
 
     override val messages: MutableList<MessageResponse> = arrayListOf()
 
-    override fun findMessageByUid(uid: String): MessageResponse? {
-        for (message in messages)
-            if (message.uid == uid) return message
-        return null
-    }
+    override fun findMessageByUid(uid: String): MessageResponse? = messages.find { it.uid == uid }
 
-    override fun findMessageByTarnishedUid(uid: String): List<MessageResponse> {
-        val tarnishedMessages = arrayListOf<MessageResponse>()
-        for (message in messages)
-            if (message.tarnishedUid == uid) tarnishedMessages.add(message)
-        return tarnishedMessages
-    }
+    override fun findMessageByTarnishedUid(uid: String): List<MessageResponse> = messages.filter { it.tarnishedUid == uid }
 
-    override fun createNewMessage(request: SendMessageRequest): StatusEnum {
+    override fun createNewMessage(request: SendMessageRequest) {
         val newMessage = MessageResponse(
             uid = UUID.randomUUID().toString(),
             tarnishedUid = request.tarnishedUid,
@@ -65,6 +56,15 @@ class MessageRepositoryStub: MessageRepository {
             badRating = 0
         )
         messages.add(newMessage)
-        return StatusEnum.SUCCESS
+    }
+
+    override fun appraiseMessage(uid: String, request: AppraiseMessageRequest) {
+        messages.find { it.uid == uid }?.let { m ->
+            if (request.rating == 1) {
+                m.goodRating = m.goodRating!! + 1
+            } else if (request.rating == 0) {
+                m.badRating = m.badRating!! + 1
+            }
+        }
     }
 }

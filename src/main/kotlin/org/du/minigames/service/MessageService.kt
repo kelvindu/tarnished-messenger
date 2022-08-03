@@ -6,7 +6,12 @@ import org.du.minigames.app.dto.SendMessageRequest
 import org.du.minigames.enum.StatusEnum
 
 interface MessageService {
-    fun getMessage(tarnishedUid: String, messageUid: String): List<MessageResponse>
+    fun getMessageFromUid(messageUid: String): MessageResponse?
+    fun getMessagesFromTarnished(tarnishedUid: String): List<MessageResponse>
     fun sendMessage(request: SendMessageRequest): StatusEnum
-    fun appraiseMessage(request: AppraiseMessageRequest): StatusEnum
+    @Throws(Exception::class)
+    fun createMessage(request: SendMessageRequest)
+    fun queueAppraisePayload(request: AppraiseMessageRequest): StatusEnum
+    @Throws(Exception::class)
+    fun appraiseMessage(request: AppraiseMessageRequest)
 }
