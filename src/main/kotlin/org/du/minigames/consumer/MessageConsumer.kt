@@ -41,20 +41,22 @@ class MessageConsumer(
 
     fun onStop(@Observes ev: ShutdownEvent?) {
         scheduler.shutdown()
-        Log.info("Stopping and closing the topic processor")
+        Log.info("\n=======================================================================" +
+                "\n\nStopping and closing the topic processor\n\n" +
+                "=======================================================================\n")
         client.close()
     }
 
     fun processMessage(context: ServiceBusReceivedMessageContext) {
         val message = context.message
         val objectMapper = ObjectMapper()
-        Log.info("message received ${message.subject}:${message.messageId} sequence:#${message.sequenceNumber} payload:${message.body}")
+        Log.info("\n\nmessage received ${message.subject}:${message.messageId} sequence:#${message.sequenceNumber} payload:${message.body}\n\n")
         if (message.subject == PayloadType.MESSAGE.name) messageSerivce.createMessage(objectMapper.readValue(message.body.toString(), SendMessageRequest::class.java))
         else if (message.subject == PayloadType.APPRAISE.name) messageSerivce.appraiseMessage(objectMapper.readValue(message.body.toString(), AppraiseMessageRequest::class.java))
         context.complete()
     }
     fun processError(context: ServiceBusErrorContext?, countdownLatch: CountDownLatch) {
-        Log.error("Error receving message:${context!!.errorSource}, countdown:${countdownLatch.count}")
+        Log.error("\n\nError receving message:${context!!.errorSource}, countdown:${countdownLatch.count}\n\n")
     }
 
     override fun run() {
@@ -77,7 +79,9 @@ class MessageConsumer(
                     )
                 }
                 .buildProcessorClient()
-            Log.info("Starting the topic processor")
+            Log.info("\n=======================================================================" +
+                    "\n\nStarting the topic processor\n\n" +
+                    "=======================================================================\n")
             client.start()
         }
     }

@@ -32,13 +32,15 @@ class MessageDlqConsumer(
 
     fun onStop(@Observes ev: ShutdownEvent?) {
         scheduler.shutdown()
-        Log.info("Stopping and closing the topic processor")
+        Log.info("\n=======================================================================" +
+                "\n\nStopping and closing the topic processor\n\n" +
+                "=======================================================================\n")
         client.close()
     }
 
     fun processMessage(context: ServiceBusReceivedMessageContext) {
         val message = context.message
-        Log.info("DLQ message is ${message.subject}:${message.messageId}:${message.body}")
+        Log.info("\n\nDLQ message is ${message.subject}:${message.messageId}:${message.body}\n\n")
         val reMessage = ServiceBusMessage(message.body)
         reMessage.subject = message.subject
         reMessage.messageId = message.messageId
@@ -46,7 +48,7 @@ class MessageDlqConsumer(
         context.complete()
     }
     fun processError(context: ServiceBusErrorContext?, countdownLatch: CountDownLatch) {
-        Log.error("Error receving message:${context!!.errorSource}, countdown:${countdownLatch.count}")
+        Log.error("\n\nError receving message:${context!!.errorSource}, countdown:${countdownLatch.count}\n\n")
     }
 
     override fun run() {
@@ -68,7 +70,9 @@ class MessageDlqConsumer(
                     )
                 }
                 .buildProcessorClient()
-            Log.info("Starting the topic DLQ processor")
+            Log.info("\n=======================================================================" +
+                    "\n\nStarting the topic DLQ processor\n\n" +
+                    "=======================================================================\n")
             client.start()
         }
     }
