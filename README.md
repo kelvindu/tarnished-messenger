@@ -1,6 +1,6 @@
 # tarnished-messenger Project
 
-A simple message broker for tarnished into the lands between.
+A simple message communication service for all maidenless tarnished in the lands between.
 
 This project uses Quarkus.
 If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
